@@ -16,7 +16,7 @@ namespace OS_Kurs_VynogradovMM
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Application.Run(new MIDI_player());
         }
     }
 }
