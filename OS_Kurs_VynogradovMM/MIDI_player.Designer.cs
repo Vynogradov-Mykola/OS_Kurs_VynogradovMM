@@ -30,6 +30,7 @@
         {
             this.Files = new System.Windows.Forms.ListBox();
             this.AddFile = new System.Windows.Forms.Button();
+            this.RemoveBtn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // Files
@@ -40,6 +41,7 @@
             this.Files.Name = "Files";
             this.Files.Size = new System.Drawing.Size(507, 132);
             this.Files.TabIndex = 0;
+            this.Files.DoubleClick += new System.EventHandler(this.Files_DoubleClick);
             // 
             // AddFile
             // 
@@ -51,11 +53,22 @@
             this.AddFile.UseVisualStyleBackColor = true;
             this.AddFile.Click += new System.EventHandler(this.AddFile_Click);
             // 
+            // RemoveBtn
+            // 
+            this.RemoveBtn.Location = new System.Drawing.Point(444, 181);
+            this.RemoveBtn.Name = "RemoveBtn";
+            this.RemoveBtn.Size = new System.Drawing.Size(75, 23);
+            this.RemoveBtn.TabIndex = 2;
+            this.RemoveBtn.Text = "Remove";
+            this.RemoveBtn.UseVisualStyleBackColor = true;
+            this.RemoveBtn.Click += new System.EventHandler(this.RemoveBtn_Click);
+            // 
             // MIDI_player
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(531, 343);
+            this.Controls.Add(this.RemoveBtn);
             this.Controls.Add(this.AddFile);
             this.Controls.Add(this.Files);
             this.Name = "MIDI_player";
@@ -68,6 +81,7 @@
 
         private System.Windows.Forms.ListBox Files;
         private System.Windows.Forms.Button AddFile;
+        private System.Windows.Forms.Button RemoveBtn;
     }
 }
 

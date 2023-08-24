@@ -46,6 +46,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MIDI_FileInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MIDI_FileInfo.Designer.cs">
+      <DependentUpon>MIDI_FileInfo.cs</DependentUpon>
+    </Compile>
     <Compile Include="MIDI_player.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -54,6 +60,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="MIDI_FileInfo.resx">
+      <DependentUpon>MIDI_FileInfo.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MIDI_player.resx">
       <DependentUpon>MIDI_player.cs</DependentUpon>
     </EmbeddedResource>

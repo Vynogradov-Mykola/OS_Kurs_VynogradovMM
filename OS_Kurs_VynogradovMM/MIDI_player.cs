@@ -38,6 +38,25 @@ namespace OS_Kurs_VynogradovMM
             }
             
         }
+
+        private void RemoveBtn_Click(object sender, EventArgs e)
+        {
+            if (Files.SelectedIndex != -1)
+            {
+                int remove = Files.SelectedIndex;
+                ListFile.RemoveAt(remove);
+                Files.Items.RemoveAt(remove);
+            }
+        }
+
+        private void Files_DoubleClick(object sender, EventArgs e)
+        {
+            if (Files.SelectedIndex != -1)
+            {
+                MIDI_FileInfo FileInformation =new MIDI_FileInfo(ListFile[Files.SelectedIndex]);
+                FileInformation.Show();
+            }
+        }
     }
     public class FileList
     {
@@ -48,5 +67,7 @@ namespace OS_Kurs_VynogradovMM
             Path = path;
             Name = name;
         }
+        public string getPath() { return Path; }
+        public string getName() { return Name; }
     }
 }
