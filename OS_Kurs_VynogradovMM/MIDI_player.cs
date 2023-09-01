@@ -56,8 +56,23 @@ namespace OS_Kurs_VynogradovMM
         {
             if (Files.SelectedIndex != -1)
             {
-                MIDI_FileInfo FileInformation = new MIDI_FileInfo(ListFile[Files.SelectedIndex]);
-                FileInformation.Show();
+               
+                string midiFilePath = ListFile[Files.SelectedIndex].getPath();
+                midiEvents = ReadMidiFile(ListFile[Files.SelectedIndex].getPath());
+                try
+                {
+                    MIDI_FileInfo FileInformation = new MIDI_FileInfo(ListFile[Files.SelectedIndex],midiEvents);
+                    FileInformation.ShowDialog();
+                    midiEvents = FileInformation.Events;
+
+                  //for working check, because we don`t save to file
+                  //  Console.WriteLine(midiEvents[1].DeltaTime.ToString());
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Ошибка: {ex.Message}");
+                }
+               
             }
             
         }
@@ -91,8 +106,7 @@ namespace OS_Kurs_VynogradovMM
         private const int CALLBACK_NULL = 0;
         private const int WAVE_MAPPER = -1;
         private const int MMSYSERR_NOERROR = 0;
-
-        [StructLayout(LayoutKind.Sequential)]
+        
         private struct WaveFormat
         {
             public short wFormatTag;
@@ -124,15 +138,15 @@ namespace OS_Kurs_VynogradovMM
 
             try
             {
-                List<MidiEvent> midiEvents = ReadMidiFile(midiFilePath);
-                PlayMidiEvents(midiEvents, 44100,label1,label2);
+                midiEvents = ReadMidiFile(midiFilePath);
+                PlayMidiEvents(44100,label1,label2);
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Ошибка: {ex.Message}");
             }
         }
-        static List<MidiEvent> ReadMidiFile(string filePath)
+        public List<MidiEvent> ReadMidiFile(string filePath)
         {
             List<MidiEvent> midiEvents = new List<MidiEvent>();
 
@@ -211,7 +225,7 @@ namespace OS_Kurs_VynogradovMM
                     return 0; // Unknown event type or no additional data
             }
         }
-        [StructLayout(LayoutKind.Sequential)]
+     //   [StructLayout(LayoutKind.Sequential)]
         struct WAVEHDR
         {
             public IntPtr lpData;
@@ -242,7 +256,11 @@ namespace OS_Kurs_VynogradovMM
             return value;
         }
         public int PlayChecker=0;
-        public void PlayMidiEvents(List<MidiEvent> midiEvents, int sampleRate, Label label1, Label label2)
+        public static short[] shortBuffer;
+        public int PausePosition = 0;
+        public int PauseChecker = 0;
+        List<MidiEvent> midiEvents;
+        public void PlayMidiEvents(int sampleRate, Label label1, Label label2)
         {
             int ticksPerQuarterNote = 480; // Set this value based on the MIDI file's time division
             MidiSynthesizer synthesizer = new MidiSynthesizer(sampleRate, ticksPerQuarterNote);
@@ -271,15 +289,13 @@ namespace OS_Kurs_VynogradovMM
                 synthesizer = null;
                 PlayerBar.Maximum = audioBuffer.Count;
                 shortBuffer = audioBuffer.Select(sample => (short)(sample * short.MaxValue)).ToArray();
-              //  shortBuffer=shortBuffer.Skip(2).ToArray();
                 PlayAudioBufferAsync(shortBuffer, sampleRate, 1, label1, label2);
                 audioBuffer.Clear();
                 midiEvents.Clear();
             }
         }
-       public static short[] shortBuffer;
-
-       public async Task PlayAudioBufferAsync(short[] shortBuffer, int sampleRate, int channels,Label label1, Label label2)
+       
+        public async Task PlayAudioBufferAsync(short[] shortBuffer, int sampleRate, int channels,Label label1, Label label2)
         {
             shortBuffer =shortBuffer.Skip(PausePosition).ToArray();
             IntPtr hWaveOut = IntPtr.Zero;
@@ -383,8 +399,7 @@ namespace OS_Kurs_VynogradovMM
             shortBuffer = null;
          
         }
-        public int PausePosition = 0;
-        public int PauseChecker=0;
+        
         private void PauseBtn_Click(object sender, EventArgs e)
         {
             PauseChecker = 1;
@@ -395,135 +410,9 @@ namespace OS_Kurs_VynogradovMM
             PauseChecker = 0;
         }
     }
-    public class FileList
-    {
-        string Path;
-        string Name;
-        public FileList(string path, string name)
-        {
-            Path = path;
-            Name = name;
-        }
-        public string getPath() { return Path; }
-        public string getName() { return Name; }
-    }
-    public class MidiEvent
-    {
-        public int DeltaTime { get; set; }
-        public byte StatusByte { get; set; }
-        public byte[] Data { get; set; }
-    }
-    class MidiSynthesizer
-    {
-        private int sampleRate;
-        private List<NoteState> noteStates;
-      public int TicksPerQuarterNote { get; private set; }
-     public void em()
-        {
-            noteStates.Clear();
-        }
-        
-        
-                public MidiSynthesizer(int sampleRate, int ticksPerQuarterNote)
-                {
-                    this.sampleRate = sampleRate;
-                    TicksPerQuarterNote = ticksPerQuarterNote; // Set the TicksPerQuarterNote value
-
-                    noteStates = new List<NoteState>();
-                }
-       
-        public void ProcessEvent(MidiEvent midiEvent)
-        {
-            byte statusByte = midiEvent.StatusByte;
-
-            if ((statusByte & 0xF0) == 0x90) // Note On
-            {
-                byte noteNumber = midiEvent.Data[0];
-                byte velocity = midiEvent.Data[1];
-
-                double frequency = CalculateFrequency(noteNumber);
-                double amplitude = velocity / 127.0;
-
-                // Проверка, есть ли уже состояние для этой ноты
-                NoteState existingNote = noteStates.FirstOrDefault(ns => ns.Frequency == frequency);
-
-                if (existingNote != null)
-                {
-                    existingNote.Amplitude = amplitude;
-                    existingNote.IsPlaying = true;
-                }
-                else
-                {
-                    NoteState noteState = new NoteState
-                    {
-                        Frequency = frequency,
-                        Amplitude = amplitude,
-                        Phase = 0.0,
-                        IsPlaying = true
-                    };
-                    noteStates.Add(noteState);
-                }
-            }
-            else if ((statusByte & 0xF0) == 0x80) // Note Off
-            {
-                byte noteNumber = midiEvent.Data[0];
-
-                // Остановка генерации для соответствующей ноты
-                foreach (var noteState in noteStates)
-                {
-                    if (noteState.Frequency == CalculateFrequency(noteNumber))
-                    {
-                        noteState.IsPlaying = false;
-                        break; // Найдена соответствующая нота, можно завершить поиск
-                    }
-                }
-
-            }
-            // Добавьте обработку других типов MIDI-событий по аналогии
-        }
-        
-        public float[] GenerateAudioBuffer(int numSamples)
-        {
-            float[] audioBuffer = new float[numSamples];
-
-            for (int i = 0; i < numSamples; i++)
-            {
-                double sample = 0.0;
-
-                foreach (var noteState in noteStates)
-                {
-                    if (noteState.IsPlaying)
-                    {
-                        noteState.Phase += noteState.Frequency * 2 * Math.PI / sampleRate;
-                        if (noteState.Phase > 2 * Math.PI)
-                        {
-                            noteState.Phase -= 2 * Math.PI;
-                        }
-
-                        sample += (float)(noteState.Amplitude * Math.Sin(noteState.Phase));
-                    }
-                }
-
-                audioBuffer[i] = (float)sample;
-            }
-
-            return audioBuffer;
-        }
-
-
-        private double CalculateFrequency(byte noteNumber)
-        {
-            return 440.0 * Math.Pow(2.0, (noteNumber - 69.0) / 12.0);
-        }
-
-        private class NoteState
-        {
-            public double Frequency { get; set; }
-            public double Amplitude { get; set; }
-            public double Phase { get; set; }
-            public bool IsPlaying { get; set; }
-        }
-    }
+    
+   
+    
 
 
 }

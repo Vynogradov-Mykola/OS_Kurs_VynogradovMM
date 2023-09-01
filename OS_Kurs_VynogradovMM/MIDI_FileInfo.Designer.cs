@@ -35,6 +35,9 @@
             this.PathBox = new System.Windows.Forms.TextBox();
             this.NameLabel = new System.Windows.Forms.Label();
             this.PathLabel = new System.Windows.Forms.Label();
+            this.DeltaTimeLab = new System.Windows.Forms.Label();
+            this.DeltaTimeText = new System.Windows.Forms.TextBox();
+            this.ChangeInfoBtn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // MIDI
@@ -54,6 +57,7 @@
             this.LeftBtn.TabIndex = 1;
             this.LeftBtn.Text = "<===";
             this.LeftBtn.UseVisualStyleBackColor = true;
+            this.LeftBtn.Click += new System.EventHandler(this.LeftBtn_Click);
             // 
             // RigthBtn
             // 
@@ -63,6 +67,7 @@
             this.RigthBtn.TabIndex = 2;
             this.RigthBtn.Text = "===>";
             this.RigthBtn.UseVisualStyleBackColor = true;
+            this.RigthBtn.Click += new System.EventHandler(this.RigthBtn_Click);
             // 
             // NameBox
             // 
@@ -96,11 +101,40 @@
             this.PathLabel.TabIndex = 6;
             this.PathLabel.Text = "Path";
             // 
+            // DeltaTimeLab
+            // 
+            this.DeltaTimeLab.AutoSize = true;
+            this.DeltaTimeLab.Location = new System.Drawing.Point(-1, 85);
+            this.DeltaTimeLab.Name = "DeltaTimeLab";
+            this.DeltaTimeLab.Size = new System.Drawing.Size(71, 17);
+            this.DeltaTimeLab.TabIndex = 10;
+            this.DeltaTimeLab.Text = "Delta time";
+            // 
+            // DeltaTimeText
+            // 
+            this.DeltaTimeText.Location = new System.Drawing.Point(88, 85);
+            this.DeltaTimeText.Name = "DeltaTimeText";
+            this.DeltaTimeText.Size = new System.Drawing.Size(156, 22);
+            this.DeltaTimeText.TabIndex = 9;
+            // 
+            // ChangeInfoBtn
+            // 
+            this.ChangeInfoBtn.Location = new System.Drawing.Point(0, 113);
+            this.ChangeInfoBtn.Name = "ChangeInfoBtn";
+            this.ChangeInfoBtn.Size = new System.Drawing.Size(244, 23);
+            this.ChangeInfoBtn.TabIndex = 11;
+            this.ChangeInfoBtn.Text = "Change";
+            this.ChangeInfoBtn.UseVisualStyleBackColor = true;
+            this.ChangeInfoBtn.Click += new System.EventHandler(this.ChangeInfoBtn_Click);
+            // 
             // MIDI_FileInfo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(577, 296);
+            this.Controls.Add(this.ChangeInfoBtn);
+            this.Controls.Add(this.DeltaTimeLab);
+            this.Controls.Add(this.DeltaTimeText);
             this.Controls.Add(this.PathLabel);
             this.Controls.Add(this.NameLabel);
             this.Controls.Add(this.PathBox);
@@ -124,5 +158,8 @@
         private System.Windows.Forms.TextBox PathBox;
         private System.Windows.Forms.Label NameLabel;
         private System.Windows.Forms.Label PathLabel;
+        private System.Windows.Forms.Label DeltaTimeLab;
+        private System.Windows.Forms.TextBox DeltaTimeText;
+        private System.Windows.Forms.Button ChangeInfoBtn;
     }
 }

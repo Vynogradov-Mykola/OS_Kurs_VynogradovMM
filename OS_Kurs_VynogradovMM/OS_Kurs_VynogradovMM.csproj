@@ -46,6 +46,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FileListObject.cs" />
+    <Compile Include="MidiEvent.cs" />
+    <Compile Include="MidiSynthesizer.cs" />
     <Compile Include="MIDI_FileInfo.cs">
       <SubType>Form</SubType>
     </Compile>
