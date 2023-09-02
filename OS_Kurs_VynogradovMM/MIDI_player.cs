@@ -259,9 +259,11 @@ namespace OS_Kurs_VynogradovMM
         public static short[] shortBuffer;
         public int PausePosition = 0;
         public int PauseChecker = 0;
+        public double Speed = 4;
         List<MidiEvent> midiEvents;
         public void PlayMidiEvents(int sampleRate, Label label1, Label label2)
         {
+            Speed = double.Parse(SpeedLabChange.Text);
             int ticksPerQuarterNote = 480; // Set this value based on the MIDI file's time division
             MidiSynthesizer synthesizer = new MidiSynthesizer(sampleRate, ticksPerQuarterNote);
             List<float> audioBuffer = new List<float>();
@@ -277,7 +279,7 @@ namespace OS_Kurs_VynogradovMM
                     // Calculate the duration in seconds based on the event's delta time
                     double deltaTimeInSeconds = (double)midiEvent.DeltaTime / synthesizer.TicksPerQuarterNote;
 
-                    int numSamples = (int)Math.Round(deltaTimeInSeconds * sampleRate);
+                    int numSamples = (int)Math.Round(((deltaTimeInSeconds * sampleRate)/Speed));
 
                     float[] samples = synthesizer.GenerateAudioBuffer(numSamples);
 
@@ -408,6 +410,19 @@ namespace OS_Kurs_VynogradovMM
         private void ContinueBtn_Click(object sender, EventArgs e)
         {
             PauseChecker = 0;
+        }
+
+        private void AddSpeed_Click(object sender, EventArgs e)
+        {
+            Speed += 0.5;
+            SpeedLabChange.Text = Speed.ToString();
+        }
+
+        private void SlowSpeed_Click(object sender, EventArgs e)
+        {
+            if (Speed > 0.5) Speed -= 0.5;
+            SpeedLabChange.Text = Speed.ToString();
+
         }
     }
     

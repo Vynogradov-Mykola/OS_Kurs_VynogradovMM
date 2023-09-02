@@ -32,12 +32,15 @@
             this.AddFile = new System.Windows.Forms.Button();
             this.RemoveBtn = new System.Windows.Forms.Button();
             this.PlayBtn = new System.Windows.Forms.Button();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.PlayerBar = new System.Windows.Forms.TrackBar();
             this.PauseBtn = new System.Windows.Forms.Button();
             this.ContinueBtn = new System.Windows.Forms.Button();
+            this.SpeedLabelText = new System.Windows.Forms.Label();
+            this.SpeedLabChange = new System.Windows.Forms.Label();
+            this.AddSpeed = new System.Windows.Forms.Button();
+            this.SlowSpeed = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.PlayerBar)).BeginInit();
             this.SuspendLayout();
             // 
@@ -80,14 +83,6 @@
             this.PlayBtn.Text = "Play";
             this.PlayBtn.UseVisualStyleBackColor = true;
             this.PlayBtn.Click += new System.EventHandler(this.PlayBtn_Click);
-            // 
-            // richTextBox1
-            // 
-            this.richTextBox1.Location = new System.Drawing.Point(544, 41);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(312, 416);
-            this.richTextBox1.TabIndex = 4;
-            this.richTextBox1.Text = "";
             // 
             // label1
             // 
@@ -134,17 +129,58 @@
             this.ContinueBtn.UseVisualStyleBackColor = true;
             this.ContinueBtn.Click += new System.EventHandler(this.ContinueBtn_Click);
             // 
+            // SpeedLabelText
+            // 
+            this.SpeedLabelText.AutoSize = true;
+            this.SpeedLabelText.Location = new System.Drawing.Point(246, 9);
+            this.SpeedLabelText.Name = "SpeedLabelText";
+            this.SpeedLabelText.Size = new System.Drawing.Size(49, 17);
+            this.SpeedLabelText.TabIndex = 10;
+            this.SpeedLabelText.Text = "Speed";
+            // 
+            // SpeedLabChange
+            // 
+            this.SpeedLabChange.AutoSize = true;
+            this.SpeedLabChange.Location = new System.Drawing.Point(261, 26);
+            this.SpeedLabChange.Name = "SpeedLabChange";
+            this.SpeedLabChange.Size = new System.Drawing.Size(16, 17);
+            this.SpeedLabChange.TabIndex = 11;
+            this.SpeedLabChange.Text = "1";
+            // 
+            // AddSpeed
+            // 
+            this.AddSpeed.Location = new System.Drawing.Point(444, 6);
+            this.AddSpeed.Name = "AddSpeed";
+            this.AddSpeed.Size = new System.Drawing.Size(75, 23);
+            this.AddSpeed.TabIndex = 12;
+            this.AddSpeed.Text = "Faster";
+            this.AddSpeed.UseVisualStyleBackColor = true;
+            this.AddSpeed.Click += new System.EventHandler(this.AddSpeed_Click);
+            // 
+            // SlowSpeed
+            // 
+            this.SlowSpeed.Location = new System.Drawing.Point(12, 6);
+            this.SlowSpeed.Name = "SlowSpeed";
+            this.SlowSpeed.Size = new System.Drawing.Size(75, 23);
+            this.SlowSpeed.TabIndex = 13;
+            this.SlowSpeed.Text = "Slow";
+            this.SlowSpeed.UseVisualStyleBackColor = true;
+            this.SlowSpeed.Click += new System.EventHandler(this.SlowSpeed_Click);
+            // 
             // MIDI_player
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(867, 482);
+            this.ClientSize = new System.Drawing.Size(524, 352);
+            this.Controls.Add(this.SlowSpeed);
+            this.Controls.Add(this.AddSpeed);
+            this.Controls.Add(this.SpeedLabChange);
+            this.Controls.Add(this.SpeedLabelText);
             this.Controls.Add(this.ContinueBtn);
             this.Controls.Add(this.PauseBtn);
             this.Controls.Add(this.PlayerBar);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.PlayBtn);
             this.Controls.Add(this.RemoveBtn);
             this.Controls.Add(this.AddFile);
@@ -163,12 +199,15 @@
         private System.Windows.Forms.Button AddFile;
         private System.Windows.Forms.Button RemoveBtn;
         private System.Windows.Forms.Button PlayBtn;
-        private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TrackBar PlayerBar;
         private System.Windows.Forms.Button PauseBtn;
         private System.Windows.Forms.Button ContinueBtn;
+        private System.Windows.Forms.Label SpeedLabelText;
+        private System.Windows.Forms.Label SpeedLabChange;
+        private System.Windows.Forms.Button AddSpeed;
+        private System.Windows.Forms.Button SlowSpeed;
     }
 }
 

@@ -46,12 +46,12 @@
             this.MIDI.ItemHeight = 16;
             this.MIDI.Location = new System.Drawing.Point(250, 1);
             this.MIDI.Name = "MIDI";
-            this.MIDI.Size = new System.Drawing.Size(325, 260);
+            this.MIDI.Size = new System.Drawing.Size(325, 100);
             this.MIDI.TabIndex = 0;
             // 
             // LeftBtn
             // 
-            this.LeftBtn.Location = new System.Drawing.Point(250, 267);
+            this.LeftBtn.Location = new System.Drawing.Point(250, 113);
             this.LeftBtn.Name = "LeftBtn";
             this.LeftBtn.Size = new System.Drawing.Size(75, 23);
             this.LeftBtn.TabIndex = 1;
@@ -61,7 +61,7 @@
             // 
             // RigthBtn
             // 
-            this.RigthBtn.Location = new System.Drawing.Point(500, 267);
+            this.RigthBtn.Location = new System.Drawing.Point(500, 113);
             this.RigthBtn.Name = "RigthBtn";
             this.RigthBtn.Size = new System.Drawing.Size(75, 23);
             this.RigthBtn.TabIndex = 2;
@@ -131,7 +131,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(577, 296);
+            this.ClientSize = new System.Drawing.Size(577, 145);
             this.Controls.Add(this.ChangeInfoBtn);
             this.Controls.Add(this.DeltaTimeLab);
             this.Controls.Add(this.DeltaTimeText);
