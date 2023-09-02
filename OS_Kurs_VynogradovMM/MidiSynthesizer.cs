@@ -72,7 +72,30 @@ namespace OS_Kurs_VynogradovMM
                 }
 
             }
-            // Добавьте обработку других типов MIDI-событий по аналогии
+            else if ((statusByte & 0xF0) == 0xA0) // Note Aftertouch
+            {
+                byte noteNumber = midiEvent.Data[0];
+                byte aftertouchValue = midiEvent.Data[1];
+            }
+            else if ((statusByte & 0xF0) == 0xB0) // Controller
+            {
+                byte controllerNumber = midiEvent.Data[0];
+                byte controllerValue = midiEvent.Data[1];
+            }
+            else if ((statusByte & 0xF0) == 0xC0) // Program Change
+            {
+                byte programNumber = midiEvent.Data[0];
+            }
+            else if ((statusByte & 0xF0) == 0xD0) // Channel Aftertouch
+            {
+                byte aftertouchValue = midiEvent.Data[0];
+            }
+            else if ((statusByte & 0xF0) == 0xE0) // Pitch Bend
+            {
+                byte lsb = midiEvent.Data[0];
+                byte msb = midiEvent.Data[1];
+                int pitchBendValue = (msb << 7) | lsb;
+            }
         }
 
         public float[] GenerateAudioBuffer(int numSamples)

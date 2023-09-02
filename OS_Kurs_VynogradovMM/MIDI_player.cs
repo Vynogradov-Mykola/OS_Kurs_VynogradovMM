@@ -174,21 +174,28 @@ namespace OS_Kurs_VynogradovMM
                         {
                             byte channel = (byte)(statusByte & 0x0F);
                             byte eventType = (byte)(statusByte >> 4);
-
+                            int eventDataLength;
                             switch (eventType)
                             {
                                 case 0x8: // Note Off
                                 case 0x9: // Note On
                                 case 0xA: // Note Aftertouch
                                 case 0xB: // Controller
-                                case 0xC: // Program Change
-                                case 0xD: // Channel Aftertouch
                                 case 0xE: // Pitch Bend
-                                          // В зависимости от типа события, читайте дополнительные байты
-                                    int eventDataLength = GetEventDataLength(eventType);
+                                    eventDataLength = 2;
                                     eventData = binaryReader.ReadBytes(eventDataLength);
                                     break;
-                                    // ... добавьте другие случаи
+                                case 0xC: // Program Change
+                                case 0xD: // Channel Aftertouch
+                                    eventDataLength = 1;
+                                    eventData = binaryReader.ReadBytes(eventDataLength);
+                                   
+                                    break;
+                                // Добавьте обработку других типов событий
+                                default:
+                                    // По умолчанию считаем, что нет дополнительных данных
+                                    eventData = new byte[0];
+                                    break;
                             }
                         }
                         midiEvents.Add(new MidiEvent
@@ -203,29 +210,7 @@ namespace OS_Kurs_VynogradovMM
 
             return midiEvents;
         }
-        private static int GetEventDataLength(byte eventType)
-        {
-            switch (eventType)
-            {
-                case 0x8: // Note Off
-                case 0x9: // Note On
-                case 0xA: // Note Aftertouch
-                case 0xB: // Controller
-                case 0xE: // Pitch Bend
-                    return 2;
-                case 0xC: // Program Change
-                case 0xD: // Channel Aftertouch
-                    return 1;
-                // Add more cases for other event types
-                // For example:
-                // case 0x2: // Start of Sequence
-                // case 0x3: // End of Sequence
-                // ...
-                default:
-                    return 0; // Unknown event type or no additional data
-            }
-        }
-     //   [StructLayout(LayoutKind.Sequential)]
+      
         struct WAVEHDR
         {
             public IntPtr lpData;
@@ -259,7 +244,7 @@ namespace OS_Kurs_VynogradovMM
         public static short[] shortBuffer;
         public int PausePosition = 0;
         public int PauseChecker = 0;
-        public double Speed = 4;
+        public double Speed = 1;
         List<MidiEvent> midiEvents;
         public void PlayMidiEvents(int sampleRate, Label label1, Label label2)
         {
