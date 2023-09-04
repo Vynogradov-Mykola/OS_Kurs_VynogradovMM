@@ -92,15 +92,17 @@
             this.label1.Size = new System.Drawing.Size(46, 17);
             this.label1.TabIndex = 5;
             this.label1.Text = "label1";
+            this.label1.Visible = false;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(249, 84);
+            this.label2.Location = new System.Drawing.Point(466, 76);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(46, 17);
             this.label2.TabIndex = 6;
             this.label2.Text = "label2";
+            this.label2.Visible = false;
             // 
             // PlayerBar
             // 

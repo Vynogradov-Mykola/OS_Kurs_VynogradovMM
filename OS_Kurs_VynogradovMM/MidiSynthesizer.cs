@@ -15,16 +15,13 @@ namespace OS_Kurs_VynogradovMM
         {
             noteStates.Clear();
         }
-
-
         public MidiSynthesizer(int sampleRate, int ticksPerQuarterNote)
         {
             this.sampleRate = sampleRate;
-            TicksPerQuarterNote = ticksPerQuarterNote; // Set the TicksPerQuarterNote value
+            TicksPerQuarterNote = ticksPerQuarterNote; 
 
             noteStates = new List<NoteState>();
         }
-
         public void ProcessEvent(MidiEvent midiEvent)
         {
             byte statusByte = midiEvent.StatusByte;
@@ -129,7 +126,12 @@ namespace OS_Kurs_VynogradovMM
 
         private double CalculateFrequency(byte noteNumber)
         {
-            return 440.0 * Math.Pow(2.0, (noteNumber - 69.0) / 12.0);
+            return 440.0 * Math.Pow(2.0, (noteNumber - 69.0) / 12.0); 
+            //A4 (440 Гц) имеет номер 69.
+            //Math.Pow(2.0, (noteNumber - 69.0) / 12.0): степень 2, так как 
+            //каждый полутон в музыкальной октаве в два раза выше предыдущего. 
+            //Деление на 12 - количество полутонов между эталонной A4 и noteNumber.
+            //440.0 * xxx: Масштабирование результата на частоту эталонной ноты A4 (440 Гц).
         }
 
         private class NoteState

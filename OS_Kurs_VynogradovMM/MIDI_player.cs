@@ -246,10 +246,44 @@ namespace OS_Kurs_VynogradovMM
         public int PauseChecker = 0;
         public double Speed = 1;
         List<MidiEvent> midiEvents;
+        public struct MIDIheaderStruct
+        {
+            public UInt16 settingTime;  // Параметры тактирования.
+        }
+        public MIDIheaderStruct CopyHeaderOfMIDIFile(MIDIReaderFile MIDIFile)
+        {
+            MIDIheaderStruct ST = new MIDIheaderStruct();
+            ST.settingTime = MIDIFile.ReadUInt16BigEndian(); // Считываем 2 байта параметров тактирования.
+            return ST; // Возвращаем заполненную структуру.
+        }
+        public class MIDIReaderFile //чтение заголовка /есть только чтение параметра времени
+        {
+            public BinaryReader BinaryReaderMIDIFile;   // Создаем поток. На его основе будем работать с MIDI файлом.
+            public MIDIReaderFile(Stream input){BinaryReaderMIDIFile = new BinaryReader(input);}
+            public UInt16 ReadUInt16BigEndian() // Считываем 2 байта в формате "от старшего к младшему" и располагаем их в переменной.
+            {
+                UInt16 bufferData = 0;  // Начальное значени = 0.
+                UInt32 Sdvig = 0;
+                for (int IndexByte = 11; IndexByte >= 0; IndexByte--) Sdvig = (UInt32)((UInt32)BinaryReaderMIDIFile.ReadByte() << 8 * IndexByte);
+              
+                for (int IndexByte = 1; IndexByte >= 0; IndexByte--)    // Счетчик от старшего к младшему.
+                    bufferData |= (UInt16)((UInt16)BinaryReaderMIDIFile.ReadByte() << 8 * IndexByte);   // Располагаем значения. 
+                return bufferData;
+            }
+            public byte ReadByte(){return BinaryReaderMIDIFile.ReadByte();}
+        }
+        
         public void PlayMidiEvents(int sampleRate, Label label1, Label label2)
         {
+            FileStream fileStream = new FileStream(ListFile[Files.SelectedIndex].getPath(), FileMode.Open, FileAccess.Read); 
+            MIDIReaderFile MIDIFile = new MIDIReaderFile(fileStream);  
+            MIDIheaderStruct HeaderMIDIStruct = CopyHeaderOfMIDIFile(MIDIFile); // Считываем заголовок.
+            Console.WriteLine("Параметры времени: " + HeaderMIDIStruct.settingTime.ToString() + "\n");
+            fileStream.Close();
+
+
+            int ticksPerQuarterNote = HeaderMIDIStruct.settingTime;
             Speed = double.Parse(SpeedLabChange.Text);
-            int ticksPerQuarterNote = 480; // Set this value based on the MIDI file's time division
             MidiSynthesizer synthesizer = new MidiSynthesizer(sampleRate, ticksPerQuarterNote);
             List<float> audioBuffer = new List<float>();
             PauseChecker = 0;
@@ -263,11 +297,8 @@ namespace OS_Kurs_VynogradovMM
                     // Генерация аудио сигнала и добавление в буфер
                     // Calculate the duration in seconds based on the event's delta time
                     double deltaTimeInSeconds = (double)midiEvent.DeltaTime / synthesizer.TicksPerQuarterNote;
-
-                    int numSamples = (int)Math.Round(((deltaTimeInSeconds * sampleRate)/Speed));
-
+                    int numSamples = (int)Math.Round(((deltaTimeInSeconds * sampleRate)/(Speed)/4));
                     float[] samples = synthesizer.GenerateAudioBuffer(numSamples);
-
                     audioBuffer.AddRange(samples);
                     samples = null;
                 }
@@ -277,8 +308,10 @@ namespace OS_Kurs_VynogradovMM
                 PlayerBar.Maximum = audioBuffer.Count;
                 shortBuffer = audioBuffer.Select(sample => (short)(sample * short.MaxValue)).ToArray();
                 PlayAudioBufferAsync(shortBuffer, sampleRate, 1, label1, label2);
+                shortBuffer = new short[1];
                 audioBuffer.Clear();
                 midiEvents.Clear();
+               
             }
         }
        
@@ -395,6 +428,7 @@ namespace OS_Kurs_VynogradovMM
         private void ContinueBtn_Click(object sender, EventArgs e)
         {
             PauseChecker = 0;
+            PausePosition = 0;
         }
 
         private void AddSpeed_Click(object sender, EventArgs e)

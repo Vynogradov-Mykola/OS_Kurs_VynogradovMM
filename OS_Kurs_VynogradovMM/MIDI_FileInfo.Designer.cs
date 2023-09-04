@@ -38,6 +38,8 @@
             this.DeltaTimeLab = new System.Windows.Forms.Label();
             this.DeltaTimeText = new System.Windows.Forms.TextBox();
             this.ChangeInfoBtn = new System.Windows.Forms.Button();
+            this.NoteNumberLab = new System.Windows.Forms.Label();
+            this.NoteChange = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // MIDI
@@ -112,9 +114,9 @@
             // 
             // DeltaTimeText
             // 
-            this.DeltaTimeText.Location = new System.Drawing.Point(88, 85);
+            this.DeltaTimeText.Location = new System.Drawing.Point(95, 85);
             this.DeltaTimeText.Name = "DeltaTimeText";
-            this.DeltaTimeText.Size = new System.Drawing.Size(156, 22);
+            this.DeltaTimeText.Size = new System.Drawing.Size(149, 22);
             this.DeltaTimeText.TabIndex = 9;
             // 
             // ChangeInfoBtn
@@ -127,11 +129,29 @@
             this.ChangeInfoBtn.UseVisualStyleBackColor = true;
             this.ChangeInfoBtn.Click += new System.EventHandler(this.ChangeInfoBtn_Click);
             // 
+            // NoteNumberLab
+            // 
+            this.NoteNumberLab.AutoSize = true;
+            this.NoteNumberLab.Location = new System.Drawing.Point(-1, 57);
+            this.NoteNumberLab.Name = "NoteNumberLab";
+            this.NoteNumberLab.Size = new System.Drawing.Size(90, 17);
+            this.NoteNumberLab.TabIndex = 13;
+            this.NoteNumberLab.Text = "Note number";
+            // 
+            // NoteChange
+            // 
+            this.NoteChange.Location = new System.Drawing.Point(95, 57);
+            this.NoteChange.Name = "NoteChange";
+            this.NoteChange.Size = new System.Drawing.Size(149, 22);
+            this.NoteChange.TabIndex = 12;
+            // 
             // MIDI_FileInfo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(577, 145);
+            this.Controls.Add(this.NoteNumberLab);
+            this.Controls.Add(this.NoteChange);
             this.Controls.Add(this.ChangeInfoBtn);
             this.Controls.Add(this.DeltaTimeLab);
             this.Controls.Add(this.DeltaTimeText);
@@ -161,5 +181,7 @@
         private System.Windows.Forms.Label DeltaTimeLab;
         private System.Windows.Forms.TextBox DeltaTimeText;
         private System.Windows.Forms.Button ChangeInfoBtn;
+        private System.Windows.Forms.Label NoteNumberLab;
+        private System.Windows.Forms.TextBox NoteChange;
     }
 }
