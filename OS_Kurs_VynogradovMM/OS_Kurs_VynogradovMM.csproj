@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="FileListObject.cs" />
     <Compile Include="MidiEvent.cs" />
+    <Compile Include="MIDIReaderFile.cs" />
     <Compile Include="MidiSynthesizer.cs" />
     <Compile Include="MIDI_FileInfo.cs">
       <SubType>Form</SubType>

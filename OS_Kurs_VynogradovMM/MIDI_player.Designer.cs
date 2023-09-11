@@ -127,7 +127,7 @@
             this.ContinueBtn.Name = "ContinueBtn";
             this.ContinueBtn.Size = new System.Drawing.Size(75, 23);
             this.ContinueBtn.TabIndex = 9;
-            this.ContinueBtn.Text = "Continue";
+            this.ContinueBtn.Text = "Retry";
             this.ContinueBtn.UseVisualStyleBackColor = true;
             this.ContinueBtn.Click += new System.EventHandler(this.ContinueBtn_Click);
             // 

@@ -58,7 +58,11 @@ namespace OS_Kurs_VynogradovMM
             {
                
                 string midiFilePath = ListFile[Files.SelectedIndex].getPath();
-                midiEvents = ReadMidiFile(ListFile[Files.SelectedIndex].getPath());
+                FileStream fileStream = new FileStream(ListFile[Files.SelectedIndex].getPath(), FileMode.Open, FileAccess.Read);
+                MIDIReaderFile MIDIFile = new MIDIReaderFile(fileStream);
+                fileStream.Close();
+                midiEvents = MIDIFile.ReadMidiFile(ListFile[Files.SelectedIndex].getPath());
+                
                 try
                 {
                     MIDI_FileInfo FileInformation = new MIDI_FileInfo(ListFile[Files.SelectedIndex],midiEvents);
@@ -138,7 +142,11 @@ namespace OS_Kurs_VynogradovMM
 
             try
             {
-                midiEvents = ReadMidiFile(midiFilePath);
+                FileStream fileStream = new FileStream(ListFile[Files.SelectedIndex].getPath(), FileMode.Open, FileAccess.Read);
+                MIDIReaderFile MIDIFile = new MIDIReaderFile(fileStream);
+                fileStream.Close();
+                midiEvents = MIDIFile.ReadMidiFile(midiFilePath);
+                
                 PlayMidiEvents(44100,label1,label2);
             }
             catch (Exception ex)
@@ -146,70 +154,7 @@ namespace OS_Kurs_VynogradovMM
                 Console.WriteLine($"Ошибка: {ex.Message}");
             }
         }
-        public List<MidiEvent> ReadMidiFile(string filePath)
-        {
-            List<MidiEvent> midiEvents = new List<MidiEvent>();
-
-            using (FileStream fileStream = new FileStream(filePath, FileMode.Open))
-            {
-                using (BinaryReader binaryReader = new BinaryReader(fileStream))
-                {
-                    // Чтение заголовка MIDI файла и переход к первому треку
-
-                    while (binaryReader.BaseStream.Position < binaryReader.BaseStream.Length)
-                    {
-                        int deltaTime = ReadVariableLengthValue(binaryReader);
-                        byte statusByte = binaryReader.ReadByte();
-                        byte[] eventData = null; // Здесь будут храниться дополнительные байты события
-
-                        // Чтение дополнительных байт в зависимости от статусного байта
-                        // и создание объекта MidiEvent
-                        if (statusByte == 0xFF) // Мета-событие
-                        {
-                            byte metaEventType = binaryReader.ReadByte();
-                            int metaEventLength = ReadVariableLengthValue(binaryReader);
-                            eventData = binaryReader.ReadBytes(metaEventLength);
-                        }
-                        else // Событие канала
-                        {
-                            byte channel = (byte)(statusByte & 0x0F);
-                            byte eventType = (byte)(statusByte >> 4);
-                            int eventDataLength;
-                            switch (eventType)
-                            {
-                                case 0x8: // Note Off
-                                case 0x9: // Note On
-                                case 0xA: // Note Aftertouch
-                                case 0xB: // Controller
-                                case 0xE: // Pitch Bend
-                                    eventDataLength = 2;
-                                    eventData = binaryReader.ReadBytes(eventDataLength);
-                                    break;
-                                case 0xC: // Program Change
-                                case 0xD: // Channel Aftertouch
-                                    eventDataLength = 1;
-                                    eventData = binaryReader.ReadBytes(eventDataLength);
-                                   
-                                    break;
-                                // Добавьте обработку других типов событий
-                                default:
-                                    // По умолчанию считаем, что нет дополнительных данных
-                                    eventData = new byte[0];
-                                    break;
-                            }
-                        }
-                        midiEvents.Add(new MidiEvent
-                        {
-                            DeltaTime = deltaTime,
-                            StatusByte = statusByte,
-                            Data = eventData // Здесь data - массив дополнительных байт
-                        });
-                    }
-                }
-            }
-
-            return midiEvents;
-        }
+        
       
         struct WAVEHDR
         {
@@ -227,19 +172,7 @@ namespace OS_Kurs_VynogradovMM
             public int wType;
             public int u;
         }
-        static int ReadVariableLengthValue(BinaryReader reader)
-        {
-            int value = 0;
-            byte nextByte;
-
-            do
-            {
-                nextByte = reader.ReadByte();
-                value = (value << 7) | (nextByte & 0x7F);
-            } while ((nextByte & 0x80) != 0);
-
-            return value;
-        }
+       
         public int PlayChecker=0;
         public static short[] shortBuffer;
         public int PausePosition = 0;
@@ -256,23 +189,7 @@ namespace OS_Kurs_VynogradovMM
             ST.settingTime = MIDIFile.ReadUInt16BigEndian(); // Считываем 2 байта параметров тактирования.
             return ST; // Возвращаем заполненную структуру.
         }
-        public class MIDIReaderFile //чтение заголовка /есть только чтение параметра времени
-        {
-            public BinaryReader BinaryReaderMIDIFile;   // Создаем поток. На его основе будем работать с MIDI файлом.
-            public MIDIReaderFile(Stream input){BinaryReaderMIDIFile = new BinaryReader(input);}
-            public UInt16 ReadUInt16BigEndian() // Считываем 2 байта в формате "от старшего к младшему" и располагаем их в переменной.
-            {
-                UInt16 bufferData = 0;  // Начальное значени = 0.
-                UInt32 Sdvig = 0;
-                for (int IndexByte = 11; IndexByte >= 0; IndexByte--) Sdvig = (UInt32)((UInt32)BinaryReaderMIDIFile.ReadByte() << 8 * IndexByte);
-              
-                for (int IndexByte = 1; IndexByte >= 0; IndexByte--)    // Счетчик от старшего к младшему.
-                    bufferData |= (UInt16)((UInt16)BinaryReaderMIDIFile.ReadByte() << 8 * IndexByte);   // Располагаем значения. 
-                return bufferData;
-            }
-            public byte ReadByte(){return BinaryReaderMIDIFile.ReadByte();}
-        }
-        
+       
         public void PlayMidiEvents(int sampleRate, Label label1, Label label2)
         {
             FileStream fileStream = new FileStream(ListFile[Files.SelectedIndex].getPath(), FileMode.Open, FileAccess.Read); 
@@ -298,6 +215,7 @@ namespace OS_Kurs_VynogradovMM
                     // Calculate the duration in seconds based on the event's delta time
                     double deltaTimeInSeconds = (double)midiEvent.DeltaTime / synthesizer.TicksPerQuarterNote;
                     int numSamples = (int)Math.Round(((deltaTimeInSeconds * sampleRate)/(Speed)/4));
+                   
                     float[] samples = synthesizer.GenerateAudioBuffer(numSamples);
                     audioBuffer.AddRange(samples);
                     samples = null;
@@ -335,7 +253,7 @@ namespace OS_Kurs_VynogradovMM
             WAVEHDR waveHdr = new WAVEHDR
             {
                 lpData = pBuffer,
-                dwBufferLength = shortBuffer.Length,// * sizeof(short),
+                dwBufferLength = shortBuffer.Length,
                 dwFlags = 0,
                 dwUser = IntPtr.Zero,
                 dwLoops = 0,
@@ -366,13 +284,13 @@ namespace OS_Kurs_VynogradovMM
             }
 
             MCI_STATUS_PARMS statusParms = new MCI_STATUS_PARMS();
-            statusParms.dwItem = 7; // MCI_STATUS_POSITION
+            statusParms.dwItem = 7; 
             waveOutGetPosition(hWaveOut, out statusParms, Marshal.SizeOf(statusParms));
 
             int currentPosition = statusParms.dwReturn + PausePosition;
             label2.Invoke((MethodInvoker)(() =>
             {
-                label2.Text = (shortBuffer.Length + PausePosition).ToString();
+                label2.Text = (shortBuffer.Length + PausePosition).ToString();  //for easier debug
             }));
             while (currentPosition < shortBuffer.Length-1 + PausePosition)
             {
@@ -382,7 +300,7 @@ namespace OS_Kurs_VynogradovMM
                     PlayerBar.Value = currentPosition;
                     label1.Invoke((MethodInvoker)(() =>
                     {
-                        label1.Text = (currentPosition).ToString();
+                        label1.Text = (currentPosition).ToString();  //for easier debug
                     }));
                     if (PauseChecker == 1)
                     {
@@ -444,9 +362,8 @@ namespace OS_Kurs_VynogradovMM
 
         }
     }
-    
+
    
-    
 
 
 }

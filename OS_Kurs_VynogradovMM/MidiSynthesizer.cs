@@ -105,15 +105,18 @@ namespace OS_Kurs_VynogradovMM
 
                 foreach (var noteState in noteStates)
                 {
-                    if (noteState.IsPlaying)
+                    if (noteState.IsPlaying)    //Для каждой играющей ноты
                     {
+                        //Фаза представляет текущую позицию в синусоидальной волне. 
+                        //Фаза увеличивается с каждым семплом, и если фаза становится больше 2 * Math.PI, 
+                        //она обнуляется для создания периодической синусоидальной волны.
                         noteState.Phase += noteState.Frequency * 2 * Math.PI / sampleRate;
                         if (noteState.Phase > 2 * Math.PI)
                         {
                             noteState.Phase -= 2 * Math.PI;
                         }
 
-                        sample += (float)(noteState.Amplitude * Math.Sin(noteState.Phase));
+                        sample += (float)(noteState.Amplitude * Math.Sin(noteState.Phase)); //создает звуковую волну для каждой ноты.
                     }
                 }
 
