@@ -137,12 +137,6 @@ namespace OS_Kurs_VynogradovMM
             //440.0 * xxx: Масштабирование результата на частоту эталонной ноты A4 (440 Гц).
         }
 
-        private class NoteState
-        {
-            public double Frequency { get; set; }
-            public double Amplitude { get; set; }
-            public double Phase { get; set; }
-            public bool IsPlaying { get; set; }
-        }
+        
     }
 }

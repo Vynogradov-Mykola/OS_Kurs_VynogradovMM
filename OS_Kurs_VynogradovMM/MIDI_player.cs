@@ -82,24 +82,19 @@ namespace OS_Kurs_VynogradovMM
         }
         [DllImport("winmm.dll")]
         private static extern int waveOutOpen(out IntPtr hWaveOut, int uDeviceID, ref WaveFormat lpFormat, IntPtr dwCallback, IntPtr dwInstance, int dwFlags);
-
         [DllImport("winmm.dll")]
         private static extern int waveOutPrepareHeader(IntPtr hWaveOut, IntPtr lpWaveOutHdr, int uSize);
-
         [DllImport("winmm.dll")]
         private static extern int waveOutWrite(IntPtr hWaveOut, IntPtr lpWaveOutHdr, int uSize);
-
         [DllImport("winmm.dll")]
         private static extern int waveOutUnprepareHeader(IntPtr hWaveOut, IntPtr lpWaveOutHdr, int uSize);
-
         [DllImport("winmm.dll")]
         private static extern int waveOutClose(IntPtr hWaveOut);
         [DllImport("winmm.dll")]
         private static extern int waveOutGetPosition(IntPtr hWaveOut, out MCI_STATUS_PARMS lpStatus, int uSize);
-
         [DllImport("winmm.dll")]
         private static extern int waveOutReset(IntPtr hWaveOut);
-        [StructLayout(LayoutKind.Sequential)]
+ 
         private struct MCI_STATUS_PARMS
         {
             public IntPtr dwCallback;
@@ -167,11 +162,7 @@ namespace OS_Kurs_VynogradovMM
             public IntPtr lpNext;
             public IntPtr reserved;
         }
-        private struct MMTIME
-        {
-            public int wType;
-            public int u;
-        }
+       
        
         public int PlayChecker=0;
         public static short[] shortBuffer;
@@ -179,27 +170,17 @@ namespace OS_Kurs_VynogradovMM
         public int PauseChecker = 0;
         public double Speed = 1;
         List<MidiEvent> midiEvents;
-        public struct MIDIheaderStruct
-        {
-            public UInt16 settingTime;  // Параметры тактирования.
-        }
-        public MIDIheaderStruct CopyHeaderOfMIDIFile(MIDIReaderFile MIDIFile)
-        {
-            MIDIheaderStruct ST = new MIDIheaderStruct();
-            ST.settingTime = MIDIFile.ReadUInt16BigEndian(); // Считываем 2 байта параметров тактирования.
-            return ST; // Возвращаем заполненную структуру.
-        }
-       
+    
         public void PlayMidiEvents(int sampleRate, Label label1, Label label2)
         {
             FileStream fileStream = new FileStream(ListFile[Files.SelectedIndex].getPath(), FileMode.Open, FileAccess.Read); 
-            MIDIReaderFile MIDIFile = new MIDIReaderFile(fileStream);  
-            MIDIheaderStruct HeaderMIDIStruct = CopyHeaderOfMIDIFile(MIDIFile); // Считываем заголовок.
-            Console.WriteLine("Параметры времени: " + HeaderMIDIStruct.settingTime.ToString() + "\n");
+            MIDIReaderFile MIDIFile = new MIDIReaderFile(fileStream);
+            int ticksPerQuarterNote = MIDIFile.ReadUInt16BigEndian();
+            Console.WriteLine("Параметры времени: " + ticksPerQuarterNote.ToString() + "\n");
+  
+
+            
             fileStream.Close();
-
-
-            int ticksPerQuarterNote = HeaderMIDIStruct.settingTime;
             Speed = double.Parse(SpeedLabChange.Text);
             MidiSynthesizer synthesizer = new MidiSynthesizer(sampleRate, ticksPerQuarterNote);
             List<float> audioBuffer = new List<float>();

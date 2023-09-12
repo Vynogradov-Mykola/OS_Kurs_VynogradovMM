@@ -62,6 +62,7 @@
     <Compile Include="MIDI_player.Designer.cs">
       <DependentUpon>MIDI_player.cs</DependentUpon>
     </Compile>
+    <Compile Include="NoteState.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="MIDI_FileInfo.resx">
