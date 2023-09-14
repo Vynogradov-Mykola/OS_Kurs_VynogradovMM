@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Windows.Forms;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -74,7 +70,7 @@ namespace OS_Kurs_VynogradovMM
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Ошибка: {ex.Message}");
+                    Console.WriteLine($"Error: {ex.Message}");
                 }
                
             }
@@ -146,7 +142,7 @@ namespace OS_Kurs_VynogradovMM
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ошибка: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
         
@@ -176,7 +172,7 @@ namespace OS_Kurs_VynogradovMM
             FileStream fileStream = new FileStream(ListFile[Files.SelectedIndex].getPath(), FileMode.Open, FileAccess.Read); 
             MIDIReaderFile MIDIFile = new MIDIReaderFile(fileStream);
             int ticksPerQuarterNote = MIDIFile.ReadUInt16BigEndian();
-            Console.WriteLine("Параметры времени: " + ticksPerQuarterNote.ToString() + "\n");
+            Console.WriteLine("Delta time: " + ticksPerQuarterNote.ToString() + "\n");
   
 
             
@@ -223,7 +219,7 @@ namespace OS_Kurs_VynogradovMM
             int result = waveOutOpen(out hWaveOut, WAVE_MAPPER, ref waveFormat, IntPtr.Zero, IntPtr.Zero, CALLBACK_NULL);
             if (result != MMSYSERR_NOERROR)
             {
-                Console.WriteLine($"Ошибка при открытии устройства воспроизведения: {result}");
+                Console.WriteLine($"Error open audio device: {result}");
                 return;
             }
 
@@ -246,7 +242,7 @@ namespace OS_Kurs_VynogradovMM
             result = waveOutPrepareHeader(hWaveOut, hWaveOutHdr, Marshal.SizeOf(typeof(WAVEHDR)));
             if (result != MMSYSERR_NOERROR)
             {
-                Console.WriteLine($"Ошибка при подготовке буфера воспроизведения: {result}");
+                Console.WriteLine($"Error when preparing audiobufer: {result}");
                 waveOutClose(hWaveOut);
                 Marshal.FreeHGlobal(hWaveOutHdr);
                 hBuffer.Free();
@@ -256,7 +252,7 @@ namespace OS_Kurs_VynogradovMM
             result = waveOutWrite(hWaveOut, hWaveOutHdr, Marshal.SizeOf(typeof(WAVEHDR)));
             if (result != MMSYSERR_NOERROR)
             {
-                Console.WriteLine($"Ошибка при начале воспроизведения: {result}");
+                Console.WriteLine($"Error when start play: {result}");
                 waveOutUnprepareHeader(hWaveOut, hWaveOutHdr, Marshal.SizeOf(typeof(WAVEHDR)));
                 waveOutClose(hWaveOut);
                 Marshal.FreeHGlobal(hWaveOutHdr);
@@ -289,7 +285,7 @@ namespace OS_Kurs_VynogradovMM
                         result = waveOutReset(hWaveOut);
                         if (result != MMSYSERR_NOERROR)
                         {
-                            Console.WriteLine($"Ошибка при остановке воспроизведения: {result}");
+                            Console.WriteLine($"Error when stop playing: {result}");
                         }
                         break;
                     }
@@ -307,7 +303,7 @@ namespace OS_Kurs_VynogradovMM
        
             if (result != MMSYSERR_NOERROR)
             {
-                Console.WriteLine($"Ошибка при освобождении буфера воспроизведения: {result}");
+                Console.WriteLine($"Error freeing the playback buffer: {result}");
             }
           
             waveOutClose(hWaveOut);

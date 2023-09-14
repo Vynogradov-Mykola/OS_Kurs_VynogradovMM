@@ -1,12 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace OS_Kurs_VynogradovMM
@@ -65,7 +58,7 @@ namespace OS_Kurs_VynogradovMM
                 }
                 else
                 {
-                    MessageBox.Show("Невозможно конвертировать входные данные в байт.");
+                    MessageBox.Show("Can`t convert into byte.");
                 }
              
             }
