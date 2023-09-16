@@ -52,13 +52,13 @@ namespace OS_Kurs_VynogradovMM
             if ((statusByte & 0xF0) == 0x90)
             {
                 string g = NoteChange.Text;
-                if (byte.TryParse(g, out byte byteValue))
+                if (Int16.Parse(g) < 128 && Int16.Parse(g) > -1)
                 {
-                    Events[Counter].Data[0] = byteValue;
-                }
-                else
-                {
-                    MessageBox.Show("Can`t convert into byte.");
+                    if (byte.TryParse(g, out byte byteValue))
+                    {
+                        Events[Counter].Data[0] = byteValue;
+                    }
+                    
                 }
              
             }
